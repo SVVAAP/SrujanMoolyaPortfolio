@@ -1,76 +1,72 @@
-import React from 'react';
+import { useState, useRef } from "react";
+import { useReactToPrint } from "react-to-print";
+import WebDevResume from "./WebDevResume";
+import GameDevResume from "./GameDevResume";
+import { motion } from "framer-motion";
 
-const Resume = () => {
-    return (
-        <div className="max-w-3xl mx-auto p-8 bg-white shadow-lg rounded-lg border border-gray-200">
-            <header className="text-center mb-8">
-                <img 
-                    className="w-32 h-32 mx-auto rounded-full border-4 border-gray-300 shadow-md" 
-                    src="https://media.licdn.com/dms/image/v2/D5603AQEbOr3huxeb2w/profile-displayphoto-shrink_400_400/profile-displayphoto-shrink_400_400/0/1695266645091?e=1744243200&v=beta&t=5yf6GBMar_in2B9z0zg1m2mlQDRBYIwzWrgp2urTZ7Q" 
-                    alt="Srujan Moolya" 
-                />
-                <h1 className="text-3xl font-bold text-gray-800 mt-4">Srujan Moolya</h1>
-                <p className="text-lg text-gray-600">Web and Game Developer</p>
-            </header>
+export default function ResumeSection() {
+  const [activeTab, setActiveTab] = useState("web");
+  const resumeRef = useRef(null);
 
-            <section className="mb-6">
-                <h2 className="text-2xl font-semibold text-gray-800 border-b-2 border-gray-300 pb-2">Summary</h2>
-                <p className="text-gray-700 mt-2">
-                    Passionate web and game developer with experience in creating dynamic and engaging applications. Skilled in various programming languages and frameworks, with a strong focus on delivering high-quality user experiences.
-                </p>
-            </section>
+  const handlePrint = useReactToPrint({
+    content: () => resumeRef.current,
+    documentTitle: activeTab === "web" ? "SrujanWebDevResume" : "SrujanGameDevResume",
+    removeAfterPrint: true,
+  });
 
-            <section className="mb-6">
-                <h2 className="text-2xl font-semibold text-gray-800 border-b-2 border-gray-300 pb-2">Skills</h2>
-                <ul className="grid grid-cols-2 gap-2 mt-2 text-gray-700">
-                    <li>JavaScript, React, Node.js</li>
-                    <li>HTML, CSS, Tailwind CSS</li>
-                    <li>Unity, C#</li>
-                    <li>Git, GitHub</li>
-                    <li>Firebase, MongoDB</li>
-                    <li>Agile Development</li>
-                </ul>
-            </section>
-
-            <section className="mb-6">
-                <h2 className="text-2xl font-semibold text-gray-800 border-b-2 border-gray-300 pb-2">Experience</h2>
-
-                <div className="mb-4">
-                    <h3 className="text-xl font-semibold text-gray-800">Web Developer</h3>
-                    <p className="text-gray-600">Company Name - Location | Jan 2020 - Present</p>
-                    <ul className="list-disc list-inside text-gray-700 mt-2">
-                        <li>Developed and maintained web applications using React and Node.js.</li>
-                        <li>Collaborated with designers to create responsive and user-friendly interfaces.</li>
-                        <li>Implemented RESTful APIs and integrated third-party services.</li>
-                    </ul>
-                </div>
-
-                <div>
-                    <h3 className="text-xl font-semibold text-gray-800">Game Developer</h3>
-                    <p className="text-gray-600">Company Name - Location | Jan 2018 - Dec 2019</p>
-                    <ul className="list-disc list-inside text-gray-700 mt-2">
-                        <li>Developed 2D and 3D games using Unity and C#.</li>
-                        <li>Worked on game mechanics, physics, and AI.</li>
-                        <li>Collaborated with artists and designers to create engaging gameplay experiences.</li>
-                    </ul>
-                </div>
-            </section>
-
-            <section>
-                <h2 className="text-2xl font-semibold text-gray-800 border-b-2 border-gray-300 pb-2">Education</h2>
-                <div className="mt-2">
-                    <h3 className="text-xl font-semibold text-gray-800">Master of Computer Applications (MCA)</h3>
-                    <p className="text-gray-600">PPC College, Udupi - Mangalore University</p>
-                    <p className="text-gray-600">2024 - 2026</p>
-                </div>
-                <div className="mt-4">
-                    <h3 className="text-xl font-semibold text-gray-800">Bachelor of Computer Applications (BCA)</h3>
-                    <p className="text-gray-600">St. Mary's College, Shirva - Mangalore University</p>
-                    <p className="text-gray-600">2021 - 2024</p>
-                </div>
-            </section>
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-950 to-black text-sky-100 py-12 px-4">
+      <motion.div
+        className="max-w-4xl mx-auto p-8 rounded-2xl shadow-2xl bg-black/80 border border-gray-800"
+        initial={{ opacity: 0, y: 40 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.7 }}
+      >
+        {/* Navigation buttons */}
+        <div className="flex justify-center gap-4 mb-8">
+          <button
+            className={`px-4 py-2 rounded-lg font-semibold transition-all focus:outline-none border-2 ${
+              activeTab === "web"
+                ? "bg-sky-600 text-white border-sky-600 shadow"
+                : "bg-gray-900 text-sky-200 border-gray-700 hover:bg-sky-800 hover:text-white"
+            }`}
+            onClick={() => setActiveTab("web")}
+          >
+            Web Developer Resume
+          </button>
+          <button
+            className={`px-4 py-2 rounded-lg font-semibold transition-all focus:outline-none border-2 ${
+              activeTab === "game"
+                ? "bg-sky-600 text-white border-sky-600 shadow"
+                : "bg-gray-900 text-sky-200 border-gray-700 hover:bg-sky-800 hover:text-white"
+            }`}
+            onClick={() => setActiveTab("game")}
+          >
+            Game Developer Resume
+          </button>
         </div>
-    );
-};
 
-export default Resume;
+        {/* Assign ref to div wrapping the printable content */}
+        <motion.div
+          ref={resumeRef}
+          className="bg-gray-900/90 border border-gray-800 rounded-xl p-6 shadow-lg"
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+        >
+          {activeTab === "web" ? <WebDevResume /> : <GameDevResume />}
+        </motion.div>
+
+        {/* Print Button */}
+        <div className="flex justify-center mt-8">
+          <button
+            className="bg-green-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-green-500 transition-all shadow-lg text-lg"
+            onClick={handlePrint}
+          >
+            Download Resume
+          </button>
+        </div>
+      </motion.div>
+    </div>
+  );
+}
